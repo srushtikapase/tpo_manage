@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sent Mails Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>📧 Sent Mails Dashboard</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Recipient</th>
+                    <th>Subject</th>
+                    <th>Message</th>
+                    <th>Sent At</th>
+                </tr>
+            </thead>
+            <tbody id="emailsTable">
+                <!-- Emails will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function fetchSentEmails() {
+            fetch('sent_mails.php') // Fetching data from PHP file
+                .then(response => response.json())
+                .then(data => {
+                    let tableContent = '';
+                    if (data.length === 0) {
+                        tableContent = "<tr><td colspan='4'>No emails sent yet.</td></tr>";
+                    } else {
+                        data.forEach(email => {
+                            tableContent += `
+                                <tr>
+                                    <td>${email.recipient}</td>
+                                    <td>${email.subject}</td>
+                                    <td>${email.content}</td>
+                                    <td>${email.sent_at}</td>
+                                </tr>
+                            `;
+                        });
+                    }
+                    document.getElementById('emailsTable').innerHTML = tableContent;
+                })
+                .catch(error => console.error('Error fetching emails:', error));
+        }
+
+        window.onload = fetchSentEmails;
+    </script>
+
+</body>
+</html>
